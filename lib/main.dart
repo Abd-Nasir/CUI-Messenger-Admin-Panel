@@ -16,7 +16,8 @@ void main() async {
           apiKey: "AIzaSyC6zooMl_aS_HC5UDCD305mCYqeu_QEkGw",
           appId: "1:975117575433:web:b27ad193963a97fdc5dfd8",
           messagingSenderId: "975117575433",
-          projectId: "cuimessenger"));
+          projectId: "cuimessenger",
+          storageBucket: "cuimessenger.appspot.com"));
 
   runApp(const MyApp());
 }

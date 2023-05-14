@@ -21,6 +21,7 @@ class _NotificationPanelState extends State<NotificationPanel> {
   TextEditingController descriptionController = TextEditingController();
   String? not_type = "public";
   FilePickerResult? result;
+  Uint8List? uploadFile;
 
 //FirebaseStorage storage = FirebaseStorage.instance;
   @override
@@ -148,22 +149,10 @@ class _NotificationPanelState extends State<NotificationPanel> {
                               result = await FilePicker.platform.pickFiles(
                                 allowMultiple: false,
                               );
-                              String? filePath = result!.files.first.path;
-                              String? fileName = result!.files.first.name;
-                              // Upload file
-                              final ref = FirebaseStorage.instance
-                                  .ref()
-                                  .child('uploads')
-                                  .child('$fileName');
-                              await ref.putFile(io.File(filePath!));
-                              if (result == null) {
-                                print("No file selected");
-                              } else {
-                                setState(() {});
-                                result?.files.forEach((element) {
-                                  print(element.name);
-                                });
+                              if (result != null) {
+                                uploadFile = result!.files.single.bytes!;
                               }
+                              setState(() {});
                             },
                             label: Text(
                               'Upload File',
@@ -191,7 +180,10 @@ class _NotificationPanelState extends State<NotificationPanel> {
                                       fontSize: 12,
                                     ))
                               else
-                                Text('none',
+                                Text(
+                                    result != null
+                                        ? result!.files.first.name
+                                        : 'none',
                                     style: const TextStyle(
                                       fontSize: 12,
                                     ))
@@ -214,7 +206,40 @@ class _NotificationPanelState extends State<NotificationPanel> {
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Palette.cuiPurple)),
-                            onPressed: () {},
+                            onPressed: () async {
+                              Reference storageRef = FirebaseStorage.instance
+                                  .ref()
+                                  .child('notifications')
+                                  .child(result!.files.first.name);
+                              final UploadTask uploadTask =
+                                  storageRef.putData(uploadFile!);
+
+                              final TaskSnapshot downloadUrl = await uploadTask;
+
+                              final String attchurl =
+                                  (await downloadUrl.ref.getDownloadURL());
+                              print(attchurl);
+                              // String? filePath = result!.files.first.path;
+                              // String? fileName = result!.files.first.name;
+                              // // Upload file
+                              // final ref = FirebaseStorage.instance
+                              //     .ref()
+                              //     .child('uploads')
+                              //     .child('$fileName');
+                              // print(ref.fullPath);
+                              // await ref.putFile(io.File(filePath!));
+                              // final url = await ref.getDownloadURL();
+                              // print(url);
+                              // if (result == null) {
+                              //   print("No file selected");
+                              // } else {
+                              //   setState(() {});
+                              //   result?.files.forEach((element) {
+                              //     print(element.name);
+                              //   }
+                              //   );
+                              // }
+                            },
                             child: Text("Publish")))
                   ]),
             ),
