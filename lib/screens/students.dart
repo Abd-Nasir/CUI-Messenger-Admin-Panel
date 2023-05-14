@@ -210,6 +210,7 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: CheckboxListTile(
+                                  activeColor: Palette.cuiPurple,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),

@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/src/widgets/framework.dart';
 // import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:provider/provider.dart';
 
 // class Faculty {
 //   late String email;
@@ -245,6 +244,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: CheckboxListTile(
+                                  activeColor: Palette.cuiPurple,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
