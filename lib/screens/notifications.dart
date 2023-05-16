@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
 import 'package:admin_panel_cui/model/notification_model.dart';
+import 'package:admin_panel_cui/providers/notification_providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -25,91 +25,45 @@ class _NotificationPanelState extends State<NotificationPanel> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _titleController = TextEditingController();
+  int selectedRadioTile = 1;
+  // String notificationType = "notification";
+  // bool isNotification = true;
 
-  String notificationType = "notification";
-  bool isNotification = true;
   FilePickerResult? result;
   Uint8List? uploadFile;
-  void getToken({required String title, required String text}) {
-    String? token;
-
-    FirebaseFirestore.instance
-        .collection('registered-users')
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        UserModel userModel = UserModel.fromJson(element.data());
-        print(userModel.token);
-        token = userModel.token;
-        sendNotification(token, title, text);
-      });
-    });
-
-    // token = snapshot.docs.first.id;
-
-    // print(token);
-  }
-
-  void sendNotification(String? token, String? title, String? body) {
-    createNotification(MyNotification(
-        to: token, notification: NotificationBody(title: title, body: body)));
-  }
-
-  Future<bool> createNotification(MyNotification notification) async {
-    try {
-      // print(order.billing!.firstName);
-      final url = Uri.parse('https://fcm.googleapis.com/fcm/send');
-      // var fbody = notification.toJson();
-      // print(fbody);
-      final body = jsonEncode(notification.toJson());
-      // print(body);
-      final response = await http.post(url, body: body, headers: {
-        "Content-Type": "application/json",
-        "Authorization":
-            "key =AAAA4wmJZQk:APA91bF0s_ccic5EdZZl_Pd39YOOnHRzYnr5A7IupsPvMNy3ERpAUHTRPZfHjeQjkmFZqfHomXEbUiIto9ItvQ2Yc_VMtUjyFk98xv6X8htx3fUQCOyY4vquerz9FS75391KIehSBHOn"
-      });
-
-      if (response.statusCode == 201) {
-        print('done');
-        return true;
-      }
-      print(response.body);
-    } catch (e) {
-      print(e);
-    }
-    return false;
-  }
 
   void uploadNotification(NotificationModel notification) async {
-    print(notification.notificationText);
-    if (uploadFile != null) {
-      Reference storageRef = FirebaseStorage.instance
-          .ref()
-          .child('notifications')
-          .child(result!.files.first.name);
+    if (selectedRadioTile == 1) {
+      if (uploadFile != null) {
+        Reference storageRef = FirebaseStorage.instance
+            .ref()
+            .child('notifications')
+            .child(result!.files.first.name);
 
-      final UploadTask uploadTask = storageRef.putData(uploadFile!);
+        final UploadTask uploadTask = storageRef.putData(uploadFile!);
 
-      final TaskSnapshot downloadUrl = await uploadTask;
+        final TaskSnapshot downloadUrl = await uploadTask;
 
-      final String attchurl = (await downloadUrl.ref.getDownloadURL());
-      print(attchurl);
+        final String attchurl = (await downloadUrl.ref.getDownloadURL());
+        print(attchurl);
 
-      notification.fileUrl = attchurl;
-      notification.fileName = result!.files.first.name;
-    }
+        notification.fileUrl = attchurl;
+        notification.fileName = result!.files.first.name;
+      }
 
-    final reference =
-        FirebaseFirestore.instance.collection('notifications').doc();
-    notification.notificationId = reference.id;
-    reference.set(notification.toJson()).then((value) {
-      getToken(title: _titleController.text, text: _descriptionController.text);
-      _titleController.clear();
-      _descriptionController.clear();
-      uploadFile = null;
-      result = null;
-      setState(() {});
-    });
+      final reference =
+          FirebaseFirestore.instance.collection('notifications').doc();
+      notification.notificationId = reference.id;
+      reference.set(notification.toJson()).then((value) {
+        NotificationProvider.instance.getToken(
+            title: _titleController.text, text: _descriptionController.text);
+        _titleController.clear();
+        _descriptionController.clear();
+        uploadFile = null;
+        result = null;
+        setState(() {});
+      });
+    } else {}
   }
 
 //FirebaseStorage storage = FirebaseStorage.instance;
@@ -157,11 +111,12 @@ class _NotificationPanelState extends State<NotificationPanel> {
                         child: RadioListTile(
                             activeColor: Palette.cuiPurple,
                             title: Text("Notification"),
-                            value: "notification",
-                            groupValue: notificationType,
+                            value: 1,
+                            groupValue: selectedRadioTile,
                             onChanged: (newValue) {
+                              print(newValue);
                               setState(() {
-                                notificationType = newValue!;
+                                selectedRadioTile = newValue!;
                               });
                             })),
                     Container(
@@ -169,11 +124,12 @@ class _NotificationPanelState extends State<NotificationPanel> {
                       child: RadioListTile(
                           activeColor: Palette.cuiPurple,
                           title: Text("Public Notice Board"),
-                          value: "public notice board",
-                          groupValue: notificationType,
+                          value: 2,
+                          groupValue: selectedRadioTile,
                           onChanged: (newValue) {
+                            print(newValue);
                             setState(() {
-                              notificationType = newValue!;
+                              selectedRadioTile = newValue!;
                             });
                           }),
                     ),
