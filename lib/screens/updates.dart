@@ -1,19 +1,18 @@
-import 'dart:convert';
-
 import 'package:admin_panel_cui/model/notification_model.dart';
 import 'package:admin_panel_cui/providers/notification_providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_panel_cui/screens/side_drawer.dart';
 import 'package:file_picker/file_picker.dart';
-import '../model/my_notification.dart';
-import '../model/user_model.dart';
+import '../model/public_model.dart';
 import '../style/colors.dart';
 
 class NotificationPanel extends StatefulWidget {
-  static const routeName = '/notification-screen';
+  static const routeName = '/updates-screen';
 
   const NotificationPanel({super.key});
 
@@ -25,48 +24,90 @@ class _NotificationPanelState extends State<NotificationPanel> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _titleController = TextEditingController();
+
+  String? _selectedItem = "All";
+
+  final List<String> _items = [
+    'All',
+    'Student',
+    'Faculty',
+  ];
+
   int selectedRadioTile = 1;
-  // String notificationType = "notification";
-  // bool isNotification = true;
 
   FilePickerResult? result;
   Uint8List? uploadFile;
 
   void uploadNotification(NotificationModel notification) async {
-    if (selectedRadioTile == 1) {
-      if (uploadFile != null) {
-        Reference storageRef = FirebaseStorage.instance
-            .ref()
-            .child('notifications')
-            .child(result!.files.first.name);
+    if (uploadFile != null) {
+      Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('notifications')
+          .child(result!.files.first.name);
 
-        final UploadTask uploadTask = storageRef.putData(uploadFile!);
+      final UploadTask uploadTask = storageRef.putData(uploadFile!);
 
-        final TaskSnapshot downloadUrl = await uploadTask;
+      final TaskSnapshot downloadUrl = await uploadTask;
 
-        final String attchurl = (await downloadUrl.ref.getDownloadURL());
-        print(attchurl);
+      final String attchurl = (await downloadUrl.ref.getDownloadURL());
+      print(attchurl);
 
-        notification.fileUrl = attchurl;
-        notification.fileName = result!.files.first.name;
-      }
+      notification.fileUrl = attchurl;
+      notification.fileName = result!.files.first.name;
+    }
 
-      final reference =
-          FirebaseFirestore.instance.collection('notifications').doc();
-      notification.notificationId = reference.id;
-      reference.set(notification.toJson()).then((value) {
-        NotificationProvider.instance.getToken(
-            title: _titleController.text, text: _descriptionController.text);
-        _titleController.clear();
-        _descriptionController.clear();
-        uploadFile = null;
-        result = null;
-        setState(() {});
-      });
-    } else {}
+    final reference =
+        FirebaseFirestore.instance.collection('notifications').doc();
+    notification.notificationId = reference.id;
+    reference.set(notification.toJson()).then((value) {
+      NotificationProvider.instance.getToken(
+          title: _titleController.text,
+          text: _descriptionController.text,
+          to: _selectedItem!);
+
+      _titleController.clear();
+      _descriptionController.clear();
+      _selectedItem = "All";
+      uploadFile = null;
+      result = null;
+      setState(() {});
+    });
   }
 
-//FirebaseStorage storage = FirebaseStorage.instance;
+  void uploadNotice(PublicNoticeBoardModel notice) async {
+    if (uploadFile != null) {
+      Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('notices')
+          .child(result!.files.first.name);
+
+      final UploadTask uploadTask = storageRef.putData(uploadFile!);
+
+      final TaskSnapshot downloadUrl = await uploadTask;
+
+      final String attchurl = (await downloadUrl.ref.getDownloadURL());
+      print(attchurl);
+
+      notice.fileUrl = attchurl;
+      notice.fileName = result!.files.first.name;
+    }
+
+    final reference =
+        FirebaseFirestore.instance.collection('public-noticeboard').doc();
+    notice.noticeId = reference.id;
+    reference.set(notice.toJson()).then((value) {
+      NotificationProvider.instance.getToken(
+          to: 'all',
+          title: 'Noticeboard has a new notification',
+          text: _titleController.text);
+      _titleController.clear();
+      _descriptionController.clear();
+      uploadFile = null;
+      result = null;
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -91,8 +132,8 @@ class _NotificationPanelState extends State<NotificationPanel> {
             SizedBox(
               height: mediaQuery.size.height * 0.1,
             ),
-            const Text(
-              'Notifications',
+            Text(
+              'Updates',
               style: TextStyle(
                 fontSize: 22.0,
                 color: Colors.black,
@@ -107,10 +148,15 @@ class _NotificationPanelState extends State<NotificationPanel> {
                 child: Column(children: [
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Container(
-                        width: mediaQuery.size.width * 0.11,
+                        width: mediaQuery.size.height * 0.3,
                         child: RadioListTile(
                             activeColor: Palette.cuiPurple,
-                            title: Text("Notification"),
+                            title: Text(
+                              "Notification",
+                              style: TextStyle(
+                                fontSize: mediaQuery.size.height * 0.02,
+                              ),
+                            ),
                             value: 1,
                             groupValue: selectedRadioTile,
                             onChanged: (newValue) {
@@ -120,10 +166,13 @@ class _NotificationPanelState extends State<NotificationPanel> {
                               });
                             })),
                     Container(
-                      width: mediaQuery.size.width * 0.15,
+                      width: mediaQuery.size.height * 0.3,
                       child: RadioListTile(
                           activeColor: Palette.cuiPurple,
-                          title: Text("Public Notice Board"),
+                          title: Text("Public Notice Board",
+                              style: TextStyle(
+                                fontSize: mediaQuery.size.height * 0.02,
+                              )),
                           value: 2,
                           groupValue: selectedRadioTile,
                           onChanged: (newValue) {
@@ -134,6 +183,53 @@ class _NotificationPanelState extends State<NotificationPanel> {
                           }),
                     ),
                   ]),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  if (selectedRadioTile == 1)
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        buttonStyleData: ButtonStyleData(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 0.5,
+                                color: Palette.grey,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.all(5),
+                            height: mediaQuery.size.height * 0.05,
+                            width: mediaQuery.size.width * 0.08),
+                        dropdownStyleData: DropdownStyleData(
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 0.5, color: Palette.grey),
+                              borderRadius: BorderRadius.circular(10)),
+                          maxHeight: mediaQuery.size.height * 0.2,
+                        ),
+                        isExpanded: true,
+                        items: _items
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      //color: Colors.white,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ))
+                            .toList(),
+                        value: _selectedItem,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedItem = value as String;
+                          });
+                        },
+                      ),
+                    ),
                   SizedBox(
                     height: 20,
                   ),
@@ -151,11 +247,13 @@ class _NotificationPanelState extends State<NotificationPanel> {
                         return null;
                       },
                       controller: _titleController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                           border: InputBorder.none,
                           floatingLabelStyle:
                               TextStyle(color: Palette.cuiPurple),
-                          labelText: "Notification title",
+                          labelText: selectedRadioTile == 1
+                              ? "Notification title"
+                              : "Notice title",
                           hintText: "Enter optional title"),
                       textCapitalization: TextCapitalization.sentences,
                       maxLines: null,
@@ -183,8 +281,12 @@ class _NotificationPanelState extends State<NotificationPanel> {
                           border: InputBorder.none,
                           fillColor: Colors.white,
                           focusColor: Palette.white,
-                          labelText: "Notification text",
-                          hintText: "Enter notification text"),
+                          labelText: selectedRadioTile == 1
+                              ? "Notification text"
+                              : "Notice Text",
+                          hintText: selectedRadioTile == 1
+                              ? "Enter notification text"
+                              : "Enter notice text"),
                       textCapitalization: TextCapitalization.sentences,
                       maxLines: null,
                     ),
@@ -255,7 +357,9 @@ class _NotificationPanelState extends State<NotificationPanel> {
                     height: 20,
                   ),
                   Container(
-                      width: mediaQuery.size.width * 0.1,
+                      width: selectedRadioTile == 1
+                          ? mediaQuery.size.width * 0.08
+                          : mediaQuery.size.width * 0.1,
                       height: mediaQuery.size.height * 0.05,
                       decoration: BoxDecoration(
                         color: Palette.white,
@@ -265,13 +369,25 @@ class _NotificationPanelState extends State<NotificationPanel> {
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   Palette.cuiPurple)),
                           onPressed: () {
-                            uploadNotification(NotificationModel(
-                                notificationId: "",
-                                createdAt: DateTime.now().toIso8601String(),
-                                fileUrl: null,
-                                fileName: null,
-                                notificationTitle: _titleController.text,
-                                notificationText: _descriptionController.text));
+                            if (selectedRadioTile == 1) {
+                              uploadNotification(NotificationModel(
+                                  notificationId: "",
+                                  createdAt: DateTime.now().toIso8601String(),
+                                  fileUrl: null,
+                                  fileName: null,
+                                  notificationTitle: _titleController.text,
+                                  notificationText:
+                                      _descriptionController.text));
+                            } else {
+                              uploadNotice(PublicNoticeBoardModel(
+                                  noticeId: "",
+                                  createdAt: DateTime.now().toIso8601String(),
+                                  fileUrl: null,
+                                  fileName: null,
+                                  noticeTitle: _titleController.text,
+                                  noticeText: _descriptionController.text));
+                            }
+
                             if (_formKey.currentState!.validate()) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -284,7 +400,9 @@ class _NotificationPanelState extends State<NotificationPanel> {
                               );
                             }
                           },
-                          child: Text("Publish")))
+                          child: selectedRadioTile == 1
+                              ? Text("Send")
+                              : Text("Publish")))
                 ]),
               ),
             ),

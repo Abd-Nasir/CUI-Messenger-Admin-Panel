@@ -15,21 +15,21 @@ class PublicNoticeBoardModel {
     required this.noticeText,
   });
   PublicNoticeBoardModel.fromJson(Map<String, dynamic> json) {
-    noticeId = json['notificationId'];
+    noticeId = json['noticeId'];
     createdAt = json['createdAt'];
     fileUrl = json['fileUrl'];
     fileName = json['fileName'];
-    noticeTitle = json['notificationTitle'];
-    noticeText = json['notificationText'];
+    noticeTitle = json['noticeTitle'];
+    noticeText = json['noticeText'];
   }
   Map<String, dynamic> toJson() {
     late Map<String, dynamic> data = <String, dynamic>{};
-    data['notificationId'] = noticeId;
+    data['noticeId'] = noticeId;
     data['createdAt'] = createdAt;
     data['fileUrl'] = fileUrl;
     data['fileName'] = fileName;
-    data['notificationTitle'] = noticeTitle;
-    data['notificationText'] = noticeText;
+    data['noticeTitle'] = noticeTitle;
+    data['noticeText'] = noticeText;
     return data;
   }
 }

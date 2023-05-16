@@ -7,7 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class NotificationProvider {
   static NotificationProvider instance = NotificationProvider();
 
-  void getToken({required String title, required String text}) {
+  void getToken(
+      {required String title, required String text, required String to}) {
     String? token;
 
     FirebaseFirestore.instance
@@ -16,9 +17,15 @@ class NotificationProvider {
         .then((value) {
       value.docs.forEach((element) {
         UserModel userModel = UserModel.fromJson(element.data());
+        print(userModel.role);
+        print(userModel.firstName);
+        if (userModel.role == to.toLowerCase() || to.toLowerCase() == 'all') {
+          print(userModel.lastName);
+          print(userModel.role);
+          token = userModel.token;
+          sendNotification(token, title, text);
+        }
         print(userModel.token);
-        token = userModel.token;
-        sendNotification(token, title, text);
       });
     });
 

@@ -16,13 +16,15 @@ class _SideDrawerState extends State<SideDrawer> {
       children: <Widget>[
         const UserAccountsDrawerHeader(
           decoration: BoxDecoration(color: Palette.cuiPurple),
-          accountName: Text('Noor Fatima'),
-          accountEmail: Text('FA19-BSE-089@cuiwah.edu.pk'),
+          accountName: Text(
+            'Administrator',
+          ),
+          accountEmail: Text(''),
           currentAccountPicture: CircleAvatar(
             backgroundColor: Colors.white,
             child: Text(
-              "N",
-              style: TextStyle(fontSize: 40.0, color: Colors.purple),
+              "A",
+              style: TextStyle(fontSize: 40.0, color: Palette.cuiPurple),
             ),
           ),
         ),
@@ -48,11 +50,11 @@ class _SideDrawerState extends State<SideDrawer> {
         ),
         ListTile(
           onTap: () {
-            Navigator.of(context).pushReplacementNamed('/notification-screen');
+            Navigator.of(context).pushReplacementNamed('/updates-screen');
           },
-          title: Text("Notifications"),
+          title: Text("Updates"),
           trailing: Icon(
-            Icons.notifications,
+            Icons.update_outlined,
             color: Palette.cuiPurple,
           ),
         ),

@@ -1,5 +1,5 @@
 import 'package:admin_panel_cui/screens/faculty.dart';
-import 'package:admin_panel_cui/screens/notifications.dart';
+import 'package:admin_panel_cui/screens/updates.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
