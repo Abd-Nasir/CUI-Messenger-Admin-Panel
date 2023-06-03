@@ -5,7 +5,7 @@ class NotificationModel {
   late String? fileName;
   late String notificationTitle;
   late String notificationText;
-
+  late String? fileType;
   NotificationModel({
     required this.notificationId,
     required this.createdAt,
@@ -13,6 +13,7 @@ class NotificationModel {
     required this.fileName,
     required this.notificationTitle,
     required this.notificationText,
+    required this.fileType,
   });
   NotificationModel.fromJson(Map<String, dynamic> json) {
     notificationId = json['notificationId'];
@@ -21,6 +22,7 @@ class NotificationModel {
     fileName = json['fileName'];
     notificationTitle = json['notificationTitle'];
     notificationText = json['notificationText'];
+    fileType = json["file-type"];
   }
   Map<String, dynamic> toJson() {
     late Map<String, dynamic> data = <String, dynamic>{};
@@ -30,6 +32,7 @@ class NotificationModel {
     data['fileName'] = fileName;
     data['notificationTitle'] = notificationTitle;
     data['notificationText'] = notificationText;
+    data['file-type'] = fileType;
     return data;
   }
 }

@@ -5,6 +5,7 @@ class PublicNoticeBoardModel {
   late String? fileName;
   late String noticeTitle;
   late String noticeText;
+  late String? fileType;
 
   PublicNoticeBoardModel({
     required this.noticeId,
@@ -13,6 +14,7 @@ class PublicNoticeBoardModel {
     required this.fileName,
     required this.noticeTitle,
     required this.noticeText,
+    required this.fileType,
   });
   PublicNoticeBoardModel.fromJson(Map<String, dynamic> json) {
     noticeId = json['noticeId'];
@@ -21,6 +23,7 @@ class PublicNoticeBoardModel {
     fileName = json['fileName'];
     noticeTitle = json['noticeTitle'];
     noticeText = json['noticeText'];
+    fileType = json['file-type'];
   }
   Map<String, dynamic> toJson() {
     late Map<String, dynamic> data = <String, dynamic>{};
@@ -30,6 +33,7 @@ class PublicNoticeBoardModel {
     data['fileName'] = fileName;
     data['noticeTitle'] = noticeTitle;
     data['noticeText'] = noticeText;
+    data['file-type'] = fileType;
     return data;
   }
 }

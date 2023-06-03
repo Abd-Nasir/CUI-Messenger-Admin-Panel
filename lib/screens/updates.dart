@@ -54,6 +54,7 @@ class _NotificationPanelState extends State<NotificationPanel> {
 
       notification.fileUrl = attchurl;
       notification.fileName = result!.files.first.name;
+      notification.fileType = result!.files.first.extension;
     }
 
     final reference =
@@ -90,6 +91,7 @@ class _NotificationPanelState extends State<NotificationPanel> {
 
       notice.fileUrl = attchurl;
       notice.fileName = result!.files.first.name;
+      notice.fileType = result!.files.first.extension;
     }
 
     final reference =
@@ -303,16 +305,18 @@ class _NotificationPanelState extends State<NotificationPanel> {
                       child: TextButton.icon(
                           onPressed: () async {
                             result = await FilePicker.platform.pickFiles(
+                              allowedExtensions: ["pdf", 'jpg', 'jpeg', ''],
                               allowMultiple: false,
                             );
                             uploadFile = result!.files.first.bytes;
+                            // print("${result!.files.first.extension}");
                             if (result == null) {
                               print("No file selected");
                             } else {
                               setState(() {});
-                              result?.files.forEach((element) {
-                                print(element.name);
-                              });
+                              // result?.files.forEach((element) {
+                              //   print(element.name);
+                              // });
                             }
                           },
                           label: Text(
@@ -376,8 +380,8 @@ class _NotificationPanelState extends State<NotificationPanel> {
                                   fileUrl: null,
                                   fileName: null,
                                   notificationTitle: _titleController.text,
-                                  notificationText:
-                                      _descriptionController.text));
+                                  notificationText: _descriptionController.text,
+                                  fileType: null));
                             } else {
                               uploadNotice(PublicNoticeBoardModel(
                                   noticeId: "",
@@ -385,7 +389,8 @@ class _NotificationPanelState extends State<NotificationPanel> {
                                   fileUrl: null,
                                   fileName: null,
                                   noticeTitle: _titleController.text,
-                                  noticeText: _descriptionController.text));
+                                  noticeText: _descriptionController.text,
+                                  fileType: null));
                             }
 
                             if (_formKey.currentState!.validate()) {
