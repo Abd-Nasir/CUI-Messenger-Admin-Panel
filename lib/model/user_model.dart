@@ -6,35 +6,29 @@ class UserModel {
   late String lastName;
   late String email;
   late String profilePicture;
-  // late String location;
   late String token;
   late bool isOnline;
-  late bool isInCall;
   late List blockList;
   late String role;
   late String regNo;
   late String phoneNo;
-  bool? isSelected = false;
+  late bool isRestricted;
 
-  UserModel({
-    required this.uid,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.profilePicture,
-    // required this.location,
-    required this.token,
-    required this.isOnline,
-    // required this.isInCall,
-    required this.blockList,
-    required this.role,
-    required this.regNo,
-    required this.phoneNo,
-    this.isSelected,
-  });
+  UserModel(
+      {required this.uid,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.profilePicture,
+      required this.token,
+      required this.isOnline,
+      required this.blockList,
+      required this.role,
+      required this.regNo,
+      required this.phoneNo,
+      required this.isRestricted});
   UserModel.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
-
     firstName = json['first-name'];
     lastName = json['last-name'];
     email = json['email'];
@@ -43,10 +37,10 @@ class UserModel {
     isOnline = json['isOnline'];
     blockList = json['blockList'];
     role = json["role"];
-    // isInCall= json['']
+
     regNo = json['reg-no'];
     phoneNo = json['phone'];
-    // dateOfBirth = json['date-of-birth'];
+    isRestricted = json['isRestricted'];
   }
   Map<String, dynamic> toJson() {
     late Map<String, dynamic> data = <String, dynamic>{};
@@ -57,11 +51,11 @@ class UserModel {
     data["profile-picture"] = profilePicture;
     data['token'] = token;
     data['isOnline'] = isOnline;
-    data['bloackList'] = blockList;
+    data['blockList'] = blockList;
     data["role"] = role;
     data['reg-no'] = regNo;
     data['phone'] = phoneNo;
-    // data['date-of-birth'] = dateOfBirth;
+    data['isRestricted'] = isRestricted;
 
     return data;
   }
@@ -80,6 +74,7 @@ class UserModel {
       role: snap['role'],
       regNo: snap['reg-no'],
       phoneNo: snap['phone'],
+      isRestricted: snap['isRestricted'],
     );
   }
 }

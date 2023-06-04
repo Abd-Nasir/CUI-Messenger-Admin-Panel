@@ -1,8 +1,10 @@
 import 'package:admin_panel_cui/model/user_model.dart';
 import 'package:admin_panel_cui/screens/side_drawer.dart';
 import 'package:admin_panel_cui/style/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_grid_list/responsive_grid_list.dart';
 // import 'package:flutter/src/widgets/framework.dart';
 // import 'package:flutter/src/widgets/placeholder.dart';
 
@@ -123,9 +125,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                   EdgeInsets.symmetric(horizontal: mediaQuery.size.width * 0.1),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: mediaQuery.size.height * 0.1,
-                  ),
+                  SizedBox(height: mediaQuery.size.height * 0.02),
                   const Text(
                     'Faculty',
                     style: TextStyle(
@@ -135,157 +135,209 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                     ),
                   ),
                   SizedBox(height: mediaQuery.size.height * 0.02),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          onTap: () {
-                            textFieldSelected = true;
-                          },
-                          onChanged: (value) => _runFilter(value),
-                          // controller: searchController,
-                          decoration: InputDecoration(
-                            prefixIcon: GestureDetector(
-                                onTap: ((() {
-                                  // onSearch();
-                                  print('Search Pressed');
-                                })),
-                                child: const Icon(
-                                  Icons.search,
-                                  color: Palette.cuiPurple,
-                                )),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              borderSide:
-                                  const BorderSide(color: Palette.cuiPurple),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              borderSide:
-                                  const BorderSide(color: Palette.cuiPurple),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                              borderSide: BorderSide(color: Palette.cuiPurple),
-                            ),
-                            filled: true,
-                            hintStyle: const TextStyle(color: Colors.grey),
-                            hintText: "Search User",
-                            fillColor: Palette.cuiPurple.withOpacity(0.1),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: mediaQuery.size.width * 0.04, vertical: 4),
+                    decoration: BoxDecoration(
+                        color: Palette.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Palette.cuiPurple.withOpacity(0.25),
+                            blurRadius: 8.0,
+                            offset: const Offset(0.0, 2.0),
                           ),
-                        ),
+                        ]),
+                    child: TextFormField(
+                      onTap: () {
+                        textFieldSelected = true;
+                      },
+                      onChanged: (value) => _runFilter(value),
+                      // controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: "Search User",
+                        border: InputBorder.none,
                       ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Palette.cuiPurple)),
-                          onPressed: () {},
-                          child: const Text('Add')),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Palette.cuiPurple)),
-                        onPressed: () {},
-                        child: const Text('Delete'),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      border: Border.all(
-                        width: 1,
-                        color: Colors.grey,
-                      ),
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        InkWell(
-                          onTap: () => setState(() {
-                            multipleSelected.clear();
-                            for (var element in teachers) {
-                              if (element.isSelected == false) {
-                                element.isSelected = true;
-                                multipleSelected.add(element);
-                              } else {
-                                element.isSelected = false;
-                                multipleSelected.remove(element);
-                              }
-                            }
-                          }),
-                          child: const Text(
-                            "Select All",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: teachers.length,
-                            itemBuilder: (BuildContext context, index) {
-                              return Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: CheckboxListTile(
-                                  activeColor: Palette.cuiPurple,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  checkboxShape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  controlAffinity:
-                                      ListTileControlAffinity.trailing,
-                                  contentPadding: EdgeInsets.zero,
-                                  dense: true,
-                                  title: Row(children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            teachers[index].profilePicture),
-                                      ),
-                                    ),
-                                    Text(
-                                      '${teachers[index].firstName} (${teachers[index].regNo})',
-                                      style: const TextStyle(
-                                        fontSize: 14.0,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ]),
-                                  value: teachers[index].isSelected,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      teachers[index].isSelected = value!;
-                                    });
-                                  },
-                                ),
-                              );
-                            })
-                      ],
+                  Expanded(
+                    child: ResponsiveGridList(
+                      horizontalGridMargin: 50,
+                      verticalGridMargin: 10,
+                      minItemWidth: 300,
+                      maxItemsPerRow: 5,
+                      children: List.generate(teachers.length,
+                          (index) => userCard(context, teachers[index])),
                     ),
                   ),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget userCard(BuildContext context, UserModel _user) {
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      decoration: BoxDecoration(
+        color: Palette.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.25),
+            spreadRadius: 5,
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            height: 100,
+            width: 100,
+            decoration: BoxDecoration(
+              border: Border.all(width: 1, color: Palette.hintGrey),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(100.0),
+              boxShadow: [
+                BoxShadow(
+                    color: Palette.frenchBlue.withOpacity(0.15),
+                    offset: const Offset(0.0, 0.0),
+                    blurRadius: 8.0)
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(100.0),
+              child: _user.profilePicture != ""
+                  ? CachedNetworkImage(
+                      imageUrl: _user.profilePicture,
+                      fit: BoxFit.cover,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                              child: CircularProgressIndicator(
+                                  value: downloadProgress.progress)),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    )
+                  : const Icon(Icons.person_rounded),
+            ),
+          ),
+          SizedBox(height: 15),
+          Container(
+            padding: const EdgeInsets.only(left: 10),
+            child: Column(
+              // mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SelectableText(
+                  "${_user.firstName} ${_user.lastName}",
+                  style: TextStyle(
+                    color: Palette.frenchBlue,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Reg No:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    SelectableText(
+                      _user.regNo.toUpperCase(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Palette.frenchBlue,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Email: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Container(
+                      // width: 200,
+                      child: SelectableText(
+                        _user.email,
+                        textAlign: TextAlign.end,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Palette.frenchBlue,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Contact No: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    SelectableText(
+                      _user.phoneNo,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Palette.frenchBlue,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: !_user.isRestricted
+                              ? Palette.frenchBlue
+                              : Palette.red),
+                      onPressed: () {
+                        _user.isRestricted = !_user.isRestricted;
+                        FirebaseFirestore.instance
+                            .collection("registered-users")
+                            .doc(_user.uid)
+                            .set(_user.toJson());
+                        setState(() {});
+                      },
+                      child: Text(
+                          !_user.isRestricted ? 'Restrict User' : "Unrestrict"),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
