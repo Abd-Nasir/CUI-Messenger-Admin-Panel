@@ -399,7 +399,7 @@ class _NotificationPanelState extends State<NotificationPanel> {
                                   content: Text('Publishing'),
                                   backgroundColor: Palette.cuiPurple,
                                   duration: Duration(
-                                    milliseconds: 400,
+                                    seconds: 1,
                                   ),
                                 ),
                               );

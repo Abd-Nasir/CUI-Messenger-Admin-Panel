@@ -19,7 +19,7 @@ class _SideDrawerState extends State<SideDrawer> {
           accountName: Text(
             'Administrator',
           ),
-          accountEmail: Text(''),
+          accountEmail: null,
           currentAccountPicture: CircleAvatar(
             backgroundColor: Colors.white,
             child: Text(
