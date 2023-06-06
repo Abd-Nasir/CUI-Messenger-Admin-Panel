@@ -58,6 +58,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
   bool textFieldSelected = false;
   List multipleSelected = [];
   List<UserModel> teachers = [];
+  List<UserModel> foundUsers = [];
 
   void loadTeachers() {
     FirebaseFirestore.instance
@@ -80,20 +81,37 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
   @override
   void initState() {
     loadTeachers();
-    // TODO: implement initState
+
     super.initState();
   }
 
   // This function is called whenever the text field changes
+
   void _runFilter(String enteredKeyword) {
     setState(() {
       charLength = enteredKeyword.length;
-      print(charLength);
       if (charLength < 1) {
         textFieldSelected = false;
       } else {
         textFieldSelected = true;
       }
+    });
+    List<UserModel> results = [];
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = teachers;
+    } else {
+      results = teachers
+          .where((user) => user.firstName
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      foundUsers = results;
     });
   }
 
@@ -164,14 +182,25 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                     height: 20,
                   ),
                   Expanded(
-                    child: ResponsiveGridList(
-                      horizontalGridMargin: 50,
-                      verticalGridMargin: 10,
-                      minItemWidth: 300,
-                      maxItemsPerRow: 5,
-                      children: List.generate(teachers.length,
-                          (index) => userCard(context, teachers[index])),
-                    ),
+                    child: !textFieldSelected
+                        ? ResponsiveGridList(
+                            horizontalGridMargin: 50,
+                            verticalGridMargin: 10,
+                            minItemWidth: 300,
+                            maxItemsPerRow: 5,
+                            children: List.generate(teachers.length,
+                                (index) => userCard(context, teachers[index])),
+                          )
+                        : ResponsiveGridList(
+                            horizontalGridMargin: 50,
+                            verticalGridMargin: 10,
+                            minItemWidth: 300,
+                            maxItemsPerRow: 5,
+                            children: List.generate(
+                                foundUsers.length,
+                                (index) =>
+                                    userCard(context, foundUsers[index])),
+                          ),
                   ),
                 ],
               ),

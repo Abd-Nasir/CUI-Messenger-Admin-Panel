@@ -22,6 +22,35 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
   bool textFieldSelected = false;
   List multipleSelected = [];
   List<UserModel> students = [];
+  List<UserModel> foundUsers = [];
+
+  // This function is called whenever the text field changes
+  void _runFilter(String enteredKeyword) {
+    setState(() {
+      charLength = enteredKeyword.length;
+      if (charLength < 1) {
+        textFieldSelected = false;
+      } else {
+        textFieldSelected = true;
+      }
+    });
+    List<UserModel> results = [];
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = students;
+    } else {
+      results = students
+          .where((user) =>
+              user.regNo.toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      foundUsers = results;
+    });
+  }
 
   void loadStudents() {
     FirebaseFirestore.instance
@@ -48,17 +77,17 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
   }
 
   // This function is called whenever the text field changes
-  void runFilter(String enteredKeyword) {
-    setState(() {
-      charLength = enteredKeyword.length;
-      print(charLength);
-      if (charLength < 1) {
-        textFieldSelected = false;
-      } else {
-        textFieldSelected = true;
-      }
-    });
-  }
+  // void runFilter(String enteredKeyword) {
+  //   setState(() {
+  //     charLength = enteredKeyword.length;
+  //     print(charLength);
+  //     if (charLength < 1) {
+  //       textFieldSelected = false;
+  //     } else {
+  //       textFieldSelected = true;
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -117,10 +146,10 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
                       onTap: () {
                         textFieldSelected = true;
                       },
-                      onChanged: (value) => runFilter(value),
+                      onChanged: (value) => _runFilter(value),
                       // controller: searchController,
                       decoration: InputDecoration(
-                        hintText: "Search User",
+                        hintText: "Search by registeration number",
                         border: InputBorder.none,
                       ),
                     ),
@@ -129,14 +158,25 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
                     height: mediaQuery.size.height * 0.01,
                   ),
                   Expanded(
-                    child: ResponsiveGridList(
-                      horizontalGridMargin: 50,
-                      verticalGridMargin: 10,
-                      minItemWidth: 300,
-                      maxItemsPerRow: 5,
-                      children: List.generate(students.length,
-                          (index) => userCard(context, students[index])),
-                    ),
+                    child: !textFieldSelected
+                        ? ResponsiveGridList(
+                            horizontalGridMargin: 50,
+                            verticalGridMargin: 10,
+                            minItemWidth: 300,
+                            maxItemsPerRow: 5,
+                            children: List.generate(students.length,
+                                (index) => userCard(context, students[index])),
+                          )
+                        : ResponsiveGridList(
+                            horizontalGridMargin: 50,
+                            verticalGridMargin: 10,
+                            minItemWidth: 300,
+                            maxItemsPerRow: 5,
+                            children: List.generate(
+                                foundUsers.length,
+                                (index) =>
+                                    userCard(context, foundUsers[index])),
+                          ),
                   ),
                 ],
               ),
