@@ -79,9 +79,7 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
-    // final studentData = StudentList().students;
-    // final studentList =
-    //     Provider.of<StudentList>(context, listen: false).students;
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),

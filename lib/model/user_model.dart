@@ -13,6 +13,8 @@ class UserModel {
   late String regNo;
   late String phoneNo;
   late bool isRestricted;
+  late bool noticeNotification;
+  late bool chatNotification;
 
   UserModel(
       {required this.uid,
@@ -26,7 +28,9 @@ class UserModel {
       required this.role,
       required this.regNo,
       required this.phoneNo,
-      required this.isRestricted});
+      required this.isRestricted,
+      required this.noticeNotification,
+      required this.chatNotification});
   UserModel.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
     firstName = json['first-name'];
@@ -41,6 +45,8 @@ class UserModel {
     regNo = json['reg-no'];
     phoneNo = json['phone'];
     isRestricted = json['isRestricted'];
+    noticeNotification = json["noticeNotification"];
+    chatNotification = json['chatNotification'];
   }
   Map<String, dynamic> toJson() {
     late Map<String, dynamic> data = <String, dynamic>{};
@@ -56,6 +62,8 @@ class UserModel {
     data['reg-no'] = regNo;
     data['phone'] = phoneNo;
     data['isRestricted'] = isRestricted;
+    data['noticeNotification'] = noticeNotification;
+    data['chatNotification'] = chatNotification;
 
     return data;
   }
@@ -75,6 +83,8 @@ class UserModel {
       regNo: snap['reg-no'],
       phoneNo: snap['phone'],
       isRestricted: snap['isRestricted'],
+      noticeNotification: snap["noticeNotification"],
+      chatNotification: snap['chatNotification'],
     );
   }
 }

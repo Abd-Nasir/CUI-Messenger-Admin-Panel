@@ -17,15 +17,13 @@ class NotificationProvider {
         .then((value) {
       value.docs.forEach((element) {
         UserModel userModel = UserModel.fromJson(element.data());
-        print(userModel.role);
-        print(userModel.firstName);
-        if (userModel.role == to.toLowerCase() || to.toLowerCase() == 'all') {
-          print(userModel.lastName);
-          print(userModel.role);
-          token = userModel.token;
-          sendNotification(token, title, text);
+        if (userModel.noticeNotification == true) {
+          if (userModel.role == to.toLowerCase() || to.toLowerCase() == 'all') {
+            token = userModel.token;
+
+            sendNotification(token, title, text);
+          }
         }
-        print(userModel.token);
       });
     });
 

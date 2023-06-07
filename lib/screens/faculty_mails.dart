@@ -1,13 +1,12 @@
 import 'package:admin_panel_cui/model/mailModel.dart';
-import 'package:admin_panel_cui/model/user_model.dart';
+
 import 'package:admin_panel_cui/providers/faculty_mail_provider.dart';
 import 'package:admin_panel_cui/screens/side_drawer.dart';
 import 'package:admin_panel_cui/style/colors.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class FacultyEmail extends StatefulWidget {
   static const routeName = '/faculty-email-screen';
