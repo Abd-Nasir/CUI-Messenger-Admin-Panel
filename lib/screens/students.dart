@@ -241,7 +241,7 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SelectableText(
-                  _user.firstName + _user.lastName,
+                  '${_user.firstName} ${_user.lastName}',
                   style: TextStyle(
                       color: Palette.frenchBlue,
                       fontSize: 18,
