@@ -5,43 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
-// import 'package:flutter/src/widgets/framework.dart';
-// import 'package:flutter/src/widgets/placeholder.dart';
-
-// class Faculty {
-//   late String email;
-//   late String name;
-//   late String image;
-//   late bool value;
-//   Faculty(
-//       {required this.email,
-//       required this.name,
-//       required this.image,
-//       this.value = false});
-// }
-
-// class FacultyList with ChangeNotifier {
-//   List<Faculty> students = [
-//     Faculty(
-//         email: 'faisalshafiquebutt@ciit.edu.pk',
-//         name: 'Dr. Faisal Shafique Butt',
-//         value: false,
-//         image:
-//             "https://www.dlf.pt/dfpng/middlepng/247-2479526_round-profile-picture-png-transparent-png.png"),
-//     Faculty(
-//         email: 'faisalshafiquebutt@ciit.edu.pk',
-//         name: 'Dr. Faisal Shafique Butt',
-//         value: false,
-//         image:
-//             "https://www.pngmart.com/files/21/Account-Avatar-Profile-PNG-Photo.png"),
-//     Faculty(
-//         email: 'faisalshafiquebutt@ciit.edu.pk',
-//         name: 'Dr. Faisal Shafique Butt',
-//         value: false,
-//         image:
-//             "https://www.pngmart.com/files/21/Account-Avatar-Profile-PNG-Photo.png")
-//   ];
-// }
 
 class FacultyAdminPanel extends StatefulWidget {
   static const routeName = '/faculty-screen';
@@ -59,6 +22,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
   List multipleSelected = [];
   List<UserModel> teachers = [];
   List<UserModel> foundUsers = [];
+  TextEditingController _controller = TextEditingController();
 
   void loadTeachers() {
     FirebaseFirestore.instance
@@ -130,6 +94,100 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
           'CUI MESSENGER',
           style: TextStyle(color: Colors.black),
         ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    elevation: MaterialStatePropertyAll(5),
+                    backgroundColor:
+                        MaterialStatePropertyAll(Palette.cuiPurple)),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 200, horizontal: 500),
+                        child: Dialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          elevation: 16,
+                          child: Container(
+                            decoration:
+                                BoxDecoration(color: Palette.cuiOffWhite),
+                            child: ListView(
+                              //  shrinkWrap: true,
+                              children: <Widget>[
+                                SizedBox(height: 20),
+                                Center(
+                                    child: Text(
+                                  'Faculty Mail',
+                                  style: TextStyle(
+                                    fontSize: 22.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )),
+                                Divider(
+                                  indent: 20,
+                                  endIndent: 20,
+                                ),
+                                SizedBox(height: 20),
+                                Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    decoration: BoxDecoration(
+                                        color: Palette.white,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: TextFormField(
+                                      controller: _controller,
+                                      decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          floatingLabelStyle: TextStyle(
+                                              color: Palette.cuiPurple),
+                                          labelText: "Faculty Mail",
+                                          hintText: "Enter Faculty Mail"),
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      // maxLines: null,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Center(
+                                  child: SizedBox(
+                                    height: mediaQuery.size.height * 0.05,
+                                    width: mediaQuery.size.width * 0.05,
+                                    child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            elevation:
+                                                MaterialStatePropertyAll(5),
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    Palette.cuiPurple)),
+                                        onPressed: () {},
+                                        child: Text(
+                                          'Done',
+                                        )),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Text('Add Faculty Mail')),
+          )
+        ],
       ),
       drawer: const SideDrawer(),
       body: isLoading
@@ -235,7 +293,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
               borderRadius: BorderRadius.circular(100.0),
               boxShadow: [
                 BoxShadow(
-                    color: Palette.frenchBlue.withOpacity(0.15),
+                    color: Palette.cuiPurple.withOpacity(0.15),
                     offset: const Offset(0.0, 0.0),
                     blurRadius: 8.0)
               ],
@@ -267,7 +325,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                 SelectableText(
                   "${_user.firstName} ${_user.lastName}",
                   style: TextStyle(
-                    color: Palette.frenchBlue,
+                    color: Palette.cuiPurple,
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                   ),
@@ -287,7 +345,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                       _user.regNo.toUpperCase(),
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: Palette.frenchBlue,
+                        color: Palette.cuiPurple,
                         fontSize: 14,
                       ),
                     ),
@@ -311,7 +369,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                         textAlign: TextAlign.end,
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
-                          color: Palette.frenchBlue,
+                          color: Palette.cuiPurple,
                           fontSize: 14,
                         ),
                       ),
@@ -333,7 +391,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                       _user.phoneNo,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: Palette.frenchBlue,
+                        color: Palette.cuiPurple,
                         fontSize: 14,
                       ),
                     ),
@@ -346,8 +404,8 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: !_user.isRestricted
-                              ? Palette.frenchBlue
-                              : Palette.red),
+                              ? Palette.cuiPurple
+                              : Palette.redAccent),
                       onPressed: () {
                         _user.isRestricted = !_user.isRestricted;
                         FirebaseFirestore.instance

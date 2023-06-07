@@ -61,4 +61,5 @@ class Palette {
   static const Color privacyPolicy = Color(0xFF37393F);
   static const Color orange = Color(0xFFFFA500);
   static const Color logOut = Color(0xFFF32423);
+  static const Color redAccent = Color.fromARGB(255, 213, 0, 0);
 }

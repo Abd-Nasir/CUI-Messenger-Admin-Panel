@@ -211,7 +211,7 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
               borderRadius: BorderRadius.circular(100.0),
               boxShadow: [
                 BoxShadow(
-                    color: Palette.frenchBlue.withOpacity(0.15),
+                    color: Palette.cuiPurple.withOpacity(0.15),
                     offset: const Offset(0.0, 0.0),
                     blurRadius: 8.0)
               ],
@@ -243,7 +243,7 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
                 SelectableText(
                   '${_user.firstName} ${_user.lastName}',
                   style: TextStyle(
-                      color: Palette.frenchBlue,
+                      color: Palette.cuiPurple,
                       fontSize: 18,
                       fontWeight: FontWeight.w600),
                 ),
@@ -262,7 +262,7 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
                       _user.regNo.toUpperCase(),
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: Palette.frenchBlue,
+                        color: Palette.cuiPurple,
                         fontSize: 14,
                       ),
                     ),
@@ -286,7 +286,7 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
                         textAlign: TextAlign.end,
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
-                          color: Palette.frenchBlue,
+                          color: Palette.cuiPurple,
                           fontSize: 14,
                         ),
                       ),
@@ -308,7 +308,7 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
                       _user.phoneNo,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: Palette.frenchBlue,
+                        color: Palette.cuiPurple,
                         fontSize: 14,
                       ),
                     ),
@@ -321,8 +321,8 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: !_user.isRestricted
-                              ? Palette.frenchBlue
-                              : Palette.red),
+                              ? Palette.cuiPurple
+                              : Palette.redAccent),
                       onPressed: () {
                         _user.isRestricted = !_user.isRestricted;
                         FirebaseFirestore.instance

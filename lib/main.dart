@@ -28,11 +28,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OverlaySupport.global(
-      child: MaterialApp(title: 'Admin Panel', initialRoute: '/', routes: {
-        '/': (context) => const StudentAdminPanel(),
-        FacultyAdminPanel.routeName: (context) => const FacultyAdminPanel(),
-        NotificationPanel.routeName: (context) => const NotificationPanel(),
-      }),
+      child: MaterialApp(
+          title: 'Admin Panel',
+          debugShowCheckedModeBanner: false,
+          initialRoute: '/',
+          routes: {
+            '/': (context) => const StudentAdminPanel(),
+            FacultyAdminPanel.routeName: (context) => const FacultyAdminPanel(),
+            NotificationPanel.routeName: (context) => const NotificationPanel(),
+          }),
     );
   }
 }
