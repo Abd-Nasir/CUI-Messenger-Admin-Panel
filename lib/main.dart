@@ -1,4 +1,5 @@
 import 'package:admin_panel_cui/screens/faculty.dart';
+import 'package:admin_panel_cui/screens/faculty_mails.dart';
 import 'package:admin_panel_cui/screens/updates.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
             '/': (context) => const StudentAdminPanel(),
             FacultyAdminPanel.routeName: (context) => const FacultyAdminPanel(),
             NotificationPanel.routeName: (context) => const NotificationPanel(),
+            FacultyEmail.routeName: (context) => const FacultyEmail(),
           }),
     );
   }

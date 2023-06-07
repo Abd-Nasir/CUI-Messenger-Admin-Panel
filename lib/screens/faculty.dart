@@ -1,4 +1,6 @@
+import 'package:admin_panel_cui/model/mailModel.dart';
 import 'package:admin_panel_cui/model/user_model.dart';
+import 'package:admin_panel_cui/providers/faculty_mail_provider.dart';
 import 'package:admin_panel_cui/screens/side_drawer.dart';
 import 'package:admin_panel_cui/style/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,6 +17,7 @@ class FacultyAdminPanel extends StatefulWidget {
 }
 
 class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
+  final _formKey = GlobalKey<FormState>();
   bool isLoading = true;
   bool isChecked = false;
   var charLength;
@@ -66,7 +69,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
       results = teachers;
     } else {
       results = teachers
-          .where((user) => user.firstName
+          .where((user) => user.firstName!
               .toLowerCase()
               .contains(enteredKeyword.toLowerCase()))
           .toList();
@@ -79,12 +82,23 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
     });
   }
 
+  void addMail(MailModel facultyMail) async {
+    final reference = FirebaseFirestore.instance
+        .collection('registeredFacultyEmails')
+        .doc(facultyMail.email);
+    print(facultyMail.email);
+    reference.set(facultyMail.toJson()).then((value) {
+      FacultyMailProvider.instance.getToken(
+        email: _controller.text,
+      );
+    });
+    _controller.clear();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
-    // final studentData = FacultyList().students;
-    // final studentList =
-    //     Provider.of<FacultyList>(context, listen: false).students;
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
@@ -171,7 +185,23 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                                             backgroundColor:
                                                 MaterialStatePropertyAll(
                                                     Palette.cuiPurple)),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          addMail(MailModel(
+                                            email: _controller.text,
+                                          ));
+                                          Navigator.pop(context);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Added'),
+                                              backgroundColor:
+                                                  Palette.cuiPurple,
+                                              duration: Duration(
+                                                seconds: 1,
+                                              ),
+                                            ),
+                                          );
+                                        },
                                         child: Text(
                                           'Done',
                                         )),
@@ -302,7 +332,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
               borderRadius: BorderRadius.circular(100.0),
               child: _user.profilePicture != ""
                   ? CachedNetworkImage(
-                      imageUrl: _user.profilePicture,
+                      imageUrl: _user.profilePicture!,
                       fit: BoxFit.cover,
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => Center(
@@ -342,7 +372,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                       ),
                     ),
                     SelectableText(
-                      _user.regNo.toUpperCase(),
+                      _user.regNo!.toUpperCase(),
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Palette.cuiPurple,
@@ -388,7 +418,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                       ),
                     ),
                     SelectableText(
-                      _user.phoneNo,
+                      _user.phoneNo!,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Palette.cuiPurple,
@@ -403,19 +433,20 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: !_user.isRestricted
+                          backgroundColor: !_user.isRestricted!
                               ? Palette.cuiPurple
                               : Palette.redAccent),
                       onPressed: () {
-                        _user.isRestricted = !_user.isRestricted;
+                        _user.isRestricted = !_user.isRestricted!;
                         FirebaseFirestore.instance
                             .collection("registered-users")
                             .doc(_user.uid)
                             .set(_user.toJson());
                         setState(() {});
                       },
-                      child: Text(
-                          !_user.isRestricted ? 'Restrict User' : "Unrestrict"),
+                      child: Text(!_user.isRestricted!
+                          ? 'Restrict User'
+                          : "Unrestrict"),
                     ),
                   ],
                 ),

@@ -76,19 +76,6 @@ class _StudentAdminPanelState extends State<StudentAdminPanel> {
     super.initState();
   }
 
-  // This function is called whenever the text field changes
-  // void runFilter(String enteredKeyword) {
-  //   setState(() {
-  //     charLength = enteredKeyword.length;
-  //     print(charLength);
-  //     if (charLength < 1) {
-  //       textFieldSelected = false;
-  //     } else {
-  //       textFieldSelected = true;
-  //     }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);

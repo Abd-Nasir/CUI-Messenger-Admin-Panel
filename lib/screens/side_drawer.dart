@@ -58,6 +58,16 @@ class _SideDrawerState extends State<SideDrawer> {
             color: Palette.cuiPurple,
           ),
         ),
+        ListTile(
+          onTap: () {
+            Navigator.of(context).pushReplacementNamed('/faculty-email-screen');
+          },
+          title: Text("Faculty Emails"),
+          trailing: Icon(
+            Icons.email,
+            color: Palette.cuiPurple,
+          ),
+        ),
       ],
     ));
   }
