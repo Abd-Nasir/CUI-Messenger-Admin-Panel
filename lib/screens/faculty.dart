@@ -17,7 +17,7 @@ class FacultyAdminPanel extends StatefulWidget {
 }
 
 class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
   bool isLoading = true;
   bool isChecked = false;
   var charLength;
@@ -69,7 +69,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
       results = teachers;
     } else {
       results = teachers
-          .where((user) => user.firstName!
+          .where((user) => user.firstName
               .toLowerCase()
               .contains(enteredKeyword.toLowerCase()))
           .toList();
@@ -80,20 +80,6 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
     setState(() {
       foundUsers = results;
     });
-  }
-
-  void addMail(MailModel facultyMail) async {
-    final reference = FirebaseFirestore.instance
-        .collection('registeredFacultyEmails')
-        .doc(facultyMail.email);
-    print(facultyMail.email);
-    reference.set(facultyMail.toJson()).then((value) {
-      FacultyMailProvider.instance.getToken(
-        email: _controller.text,
-      );
-    });
-    _controller.clear();
-    setState(() {});
   }
 
   @override
@@ -174,39 +160,39 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                Center(
-                                  child: SizedBox(
-                                    height: mediaQuery.size.height * 0.05,
-                                    width: mediaQuery.size.width * 0.05,
-                                    child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            elevation:
-                                                MaterialStatePropertyAll(5),
-                                            backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    Palette.cuiPurple)),
-                                        onPressed: () {
-                                          addMail(MailModel(
-                                            email: _controller.text,
-                                          ));
-                                          Navigator.pop(context);
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text('Added'),
-                                              backgroundColor:
-                                                  Palette.cuiPurple,
-                                              duration: Duration(
-                                                seconds: 1,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: Text(
-                                          'Done',
-                                        )),
-                                  ),
-                                )
+                                // Center(
+                                //   child: SizedBox(
+                                //     height: mediaQuery.size.height * 0.05,
+                                //     width: mediaQuery.size.width * 0.05,
+                                //     child: ElevatedButton(
+                                //         style: ButtonStyle(
+                                //             elevation:
+                                //                 MaterialStatePropertyAll(5),
+                                //             backgroundColor:
+                                //                 MaterialStatePropertyAll(
+                                //                     Palette.cuiPurple)),
+                                //         onPressed: () {
+                                //           addMail(MailModel(
+                                //             email: _controller.text,
+                                //           ));
+                                //           Navigator.pop(context);
+                                //           ScaffoldMessenger.of(context)
+                                //               .showSnackBar(
+                                //             const SnackBar(
+                                //               content: Text('Added'),
+                                //               backgroundColor:
+                                //                   Palette.cuiPurple,
+                                //               duration: Duration(
+                                //                 seconds: 1,
+                                //               ),
+                                //             ),
+                                //           );
+                                //         },
+                                //         child: Text(
+                                //           'Done',
+                                //         )),
+                                //   ),
+                                // )
                               ],
                             ),
                           ),
@@ -332,7 +318,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
               borderRadius: BorderRadius.circular(100.0),
               child: _user.profilePicture != ""
                   ? CachedNetworkImage(
-                      imageUrl: _user.profilePicture!,
+                      imageUrl: _user.profilePicture,
                       fit: BoxFit.cover,
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => Center(
@@ -372,7 +358,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                       ),
                     ),
                     SelectableText(
-                      _user.regNo!.toUpperCase(),
+                      _user.regNo.toUpperCase(),
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Palette.cuiPurple,
@@ -418,7 +404,7 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                       ),
                     ),
                     SelectableText(
-                      _user.phoneNo!,
+                      _user.phoneNo,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Palette.cuiPurple,
@@ -433,20 +419,19 @@ class _FacultyAdminPanelState extends State<FacultyAdminPanel> {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: !_user.isRestricted!
+                          backgroundColor: !_user.isRestricted
                               ? Palette.cuiPurple
                               : Palette.redAccent),
                       onPressed: () {
-                        _user.isRestricted = !_user.isRestricted!;
+                        _user.isRestricted = !_user.isRestricted;
                         FirebaseFirestore.instance
                             .collection("registered-users")
                             .doc(_user.uid)
                             .set(_user.toJson());
                         setState(() {});
                       },
-                      child: Text(!_user.isRestricted!
-                          ? 'Restrict User'
-                          : "Unrestrict"),
+                      child: Text(
+                          !_user.isRestricted ? 'Restrict User' : "Unrestrict"),
                     ),
                   ],
                 ),
